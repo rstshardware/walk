@@ -7,10 +7,10 @@ package main
 import (
 	"log"
 
-	"github.com/lxn/walk"
+	"github.com/rstshardware/walk"
 
-	. "github.com/lxn/walk/declarative"
-	"github.com/lxn/win"
+	. "github.com/rstshardware/walk/declarative"
+	"github.com/rstshardware/win"
 )
 
 const myWidgetWindowClass = "MyWidget Class"

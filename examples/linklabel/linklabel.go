@@ -6,11 +6,10 @@ package main
 
 import (
 	"log"
-)
 
-import (
-	"github.com/lxn/walk"
-	. "github.com/lxn/walk/declarative"
+	"github.com/rstshardware/walk"
+
+	. "github.com/rstshardware/walk/declarative"
 )
 
 func main() {
@@ -21,7 +20,7 @@ func main() {
 		Children: []Widget{
 			LinkLabel{
 				MaxSize: Size{100, 0},
-				Text:    `I can contain multiple links like <a id="this" href="https://golang.org">this</a> or <a id="that" href="https://github.com/lxn/walk">that one</a>.`,
+				Text:    `I can contain multiple links like <a id="this" href="https://golang.org">this</a> or <a id="that" href="https://github.com/rstshardware/walk">that one</a>.`,
 				OnLinkActivated: func(link *walk.LinkLabelLink) {
 					log.Printf("id: '%s', url: '%s'\n", link.Id(), link.URL())
 				},

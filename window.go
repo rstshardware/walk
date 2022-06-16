@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+//go:build windows
 // +build windows
 
 package walk
@@ -12,11 +13,12 @@ import (
 	"image"
 	"runtime"
 	"strings"
+	"sync"
 	"sync/atomic"
 	"syscall"
 	"unsafe"
 
-	"github.com/lxn/win"
+	"github.com/rstshardware/win"
 )
 
 // App-specific message ids for internal use in Walk.
@@ -447,6 +449,7 @@ var (
 	registeredWindowClasses = make(map[string]bool)
 	defaultWndProcPtr       uintptr
 	hwnd2WindowBase         = make(map[win.HWND]*WindowBase)
+	hwnd2WindowBaseMutex    = &sync.Mutex{}
 )
 
 func init() {
@@ -645,7 +648,9 @@ func initWindowWithCfg(cfg *windowCfg) error {
 		}
 	}()
 
+	hwnd2WindowBaseMutex.Lock()
 	hwnd2WindowBase[wb.hWnd] = wb
+	hwnd2WindowBaseMutex.Unlock()
 
 	if !registeredWindowClasses[cfg.ClassName] {
 		// We subclass all windows of system classes.
@@ -886,7 +891,12 @@ func (wb *WindowBase) Dispose() {
 		wb.disposingPublisher.Publish()
 
 		wb.hWnd = 0
-		if _, ok := hwnd2WindowBase[hWnd]; ok {
+
+		hwnd2WindowBaseMutex.Lock()
+		_, ok := hwnd2WindowBase[hWnd]
+		hwnd2WindowBaseMutex.Unlock()
+
+		if ok {
 			win.DestroyWindow(hWnd)
 		}
 	}
@@ -2121,7 +2131,11 @@ func (wb *WindowBase) WriteState(state string) error {
 }
 
 func windowFromHandle(hwnd win.HWND) Window {
-	if wb := hwnd2WindowBase[hwnd]; wb != nil {
+	hwnd2WindowBaseMutex.Lock()
+	wb := hwnd2WindowBase[hwnd]
+	hwnd2WindowBaseMutex.Unlock()
+
+	if wb != nil {
 		return wb.window
 	}
 
@@ -2500,7 +2514,9 @@ func (wb *WindowBase) WndProc(hwnd win.HWND, msg uint32, wParam, lParam uintptr)
 			win.SetWindowLongPtr(wb.hWnd, win.GWLP_WNDPROC, wb.origWndProcPtr)
 		}
 
+		hwnd2WindowBaseMutex.Lock()
 		delete(hwnd2WindowBase, hwnd)
+		hwnd2WindowBaseMutex.Unlock()
 
 		wb.window.Dispose()
 		wb.hWnd = 0

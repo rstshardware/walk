@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+//go:build windows
 // +build windows
 
 package walk
@@ -14,7 +15,7 @@ import (
 
 	"golang.org/x/sys/windows"
 
-	"github.com/lxn/win"
+	"github.com/rstshardware/win"
 )
 
 // Icon is a bitmap that supports transparency and combining multiple

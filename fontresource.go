@@ -2,13 +2,15 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+//go:build windows
 // +build windows
 
 package walk
 
 import (
-	"github.com/lxn/win"
 	"syscall"
+
+	"github.com/rstshardware/win"
 )
 
 // FontMemResource represents a font resource loaded into memory from

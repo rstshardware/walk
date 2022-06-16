@@ -7,11 +7,10 @@ package main
 import (
 	"log"
 	"time"
-)
 
-import (
-	"github.com/lxn/walk"
-	. "github.com/lxn/walk/declarative"
+	"github.com/rstshardware/walk"
+
+	. "github.com/rstshardware/walk/declarative"
 )
 
 func main() {

@@ -2,6 +2,7 @@
 // Use of lb source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+//go:build windows
 // +build windows
 
 package walk
@@ -14,7 +15,7 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/lxn/win"
+	"github.com/rstshardware/win"
 )
 
 type ListBox struct {

@@ -9,11 +9,10 @@ import (
 	"os"
 	"path/filepath"
 	"time"
-)
 
-import (
-	"github.com/lxn/walk"
-	. "github.com/lxn/walk/declarative"
+	"github.com/rstshardware/walk"
+
+	. "github.com/rstshardware/walk/declarative"
 )
 
 type Directory struct {
